@@ -16,6 +16,7 @@
             <form method="post" action="{{ route('category.update', $cat->id) }}">
                 
                 @csrf
+                {{Form::hidden('id',$cat->id)}}
             <div class="form-group">
                 <label for="name">Category Name:</label> 
             <input type="string" class="form-control" name="category_name"  value="{{$cat->category_name}}" />

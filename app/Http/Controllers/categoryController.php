@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Category;
 use App\Product;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class categoryController extends Controller
 {
@@ -63,20 +64,24 @@ class categoryController extends Controller
     }
 
     // To update the data in database using edit form 
-    public function updatecategory(Request $request,$id)
+    public function updatecategory(Request $request)
     {
-        $request->validate([
-            'category_name'=>'required'
-        ]);
+        
+        
+        $categories= Category::find($request->input('id'));
+        $oldcat = $categories->category_name;
+        $categories->category_name = $request->input('category_name');
 
+        $data = array();
+        $data['product_category'] = $request->input('category_name');
         
-        $categories= Category::find($id);
-        $categories ->category_name =  $request->input('category_name');
-        
+       
+        DB::table('products')
+        ->where('product_category',$oldcat)->update($data);
         $categories->update();
         return redirect('/categories')->with('toast_success','your data has been updated successfuly');
-      
-    }
+
+        }
 
     public function deletecategory($id){
        $category =  Category::find($id);
